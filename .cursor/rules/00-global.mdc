@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+# Global Rules for Escriturashoy Repo
+
+
+
+- ALWAYS read `docs/AGENTS.md` before making significant changes.
+
+- Prefer Cloudflare for external infra and 1.00.ge for internal services.
+
+- Use GitOps: propose changes as diffs/patches suitable for PRs, not ad-hoc scripts.
+
+- Never create or expose secrets, API keys, or passwords in the repo.
+
+- When unsure which agent role you are acting as, ASK the user which role to adopt.
+
+
+
+When the user explicitly says "Act as [Agent Name]", follow the scope and constraints in `docs/AGENTS.md` for that agent.

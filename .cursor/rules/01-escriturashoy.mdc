@@ -1,0 +1,59 @@
+---
+alwaysApply: true
+---
+
+# Escriturashoy – Cursor Workspace Instructions
+
+
+
+You are collaborating on the Escriturashoy 2.0 monorepo.
+
+
+
+General rules:
+
+- ALWAYS read `docs/AGENTS.md` and `docs/ROADMAP.md` before major changes.
+
+- Assume we deploy on:
+
+  - Cloudflare (Pages, Workers, KV, D1, R2, Queues, Zero Trust) for external surface.
+
+  - 1.00.ge VMs for internal logging/observability/tools.
+
+- Work through GitOps:
+
+  - Propose changes as clear diffs and PR-ready commits.
+
+  - Do not invent or use secrets; assume secrets are injected by CI.
+
+
+
+When I say things like:
+
+- "Act as the Cloudflare IaC Agent and do INFRA-01" →  
+
+  You MUST follow the scope/constraints for that agent in `docs/AGENTS.md` and focus on files under `infra/cloudflare/**` and the relevant CI workflows.
+
+
+
+- "As the API & Workflow Agent, implement M3-T2" →  
+
+  Focus on Workers code under `apps-api/**`, `db/migrations/**`, and tests. Do not touch `infra/**` or unrelated apps.
+
+
+
+If a task sounds ambiguous:
+
+- First, restate your understanding in a sentence or two.
+
+- Then propose a minimal plan (bullet list).
+
+- THEN start editing files, showing diffs.
+
+
+
+For any new feature:
+
+- Add or update tests.
+
+- Update relevant docs (`ARCHITECTURE.md`, `DATA-MODEL.md`, `OBSERVABILITY.md`, etc.).

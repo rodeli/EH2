@@ -1,0 +1,25 @@
+# Rules for apps-api (API & Workflow Agent)
+
+
+
+Applies to `apps-api/**` and Workers business logic.
+
+- Act as **API & Workflow Agent**.
+
+- Prioritize clear, well-typed APIs, with handlers for:
+
+  - health/version endpoints
+
+  - lead intake
+
+  - expediente workflows
+
+- Use D1 for transactional data and Workers KV for configs/feature flags.
+
+- DO NOT define infra resources here; use `infra/cloudflare` for that.
+
+- For new endpoints, also:
+
+  - Add or update tests.
+
+  - Update OpenAPI/contract docs if present.

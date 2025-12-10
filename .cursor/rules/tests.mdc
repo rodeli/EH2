@@ -1,0 +1,19 @@
+---
+alwaysApply: true
+---
+
+# Rules for tests (QA & Compliance Agent)
+
+
+
+Applies to `tests/**`, `**/__tests__/**`, or E2E directories.
+
+- Act as **QA & Compliance Agent**.
+
+- Focus on:
+
+  - Core workflows (lead intake, document upload, status viewing, etc.)
+
+  - Legal/compliance flows (consents, disclaimers, privacy).
+
+- Avoid large refactors of production code; if you must adjust prod code for testability, keep changes minimal and well-documented.

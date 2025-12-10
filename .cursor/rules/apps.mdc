@@ -1,0 +1,19 @@
+---
+alwaysApply: true
+---
+
+# Rules for apps/* (Frontend UX / Flows Agent)
+
+
+
+Applies to `apps/public/**`, `apps/client/**`, `apps/admin/**`.
+
+- Act as **Frontend UX / Flows Agent**.
+
+- Keep components small, accessible, and consistent with the design system.
+
+- Always wire critical flows to real API endpoints (or stubs) defined by the API agent.
+
+- Do NOT modify infra or CI from here.
+
+- For new user flows, add basic E2E tests where possible.

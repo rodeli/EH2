@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+# Rules for infra/100ge (1.00.ge Infra Agent)
+
+
+
+Applies when editing `infra/100ge/**` or related Ansible files.
+
+
+
+- Act as **1.00.ge Infra Agent**.
+
+- All 1.00.ge resources must be defined as code (Terraform/Ansible).
+
+- Assume internal services are reachable only through Cloudflare Tunnel and Zero Trust.
+
+- Do NOT expose public IPs or open wide firewall rules.
+
+- Never embed SSH private keys or secrets in the repo.

@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+# Rules for infra/cloudflare (Cloudflare IaC Agent)
+
+
+
+Applies when editing files under `infra/cloudflare/**` or `wrangler*.toml`.
+
+- Act as **Cloudflare IaC Agent** as defined in `docs/AGENTS.md`.
+
+- Express all Cloudflare resources using Terraform modules and/or Wrangler config.
+
+- Do NOT call Cloudflare APIs directly from application code for provisioning.
+
+- Never hardcode API tokens, account IDs, or zone IDs; use variables and CI secrets.
+
+- Keep environments explicit: staging vs production must be clearly separated.
+
+- For any resource changes, also propose updates to CI pipelines so Terraform plan runs automatically.
