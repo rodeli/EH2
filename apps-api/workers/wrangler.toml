@@ -10,9 +10,9 @@ routes = [
 ]
 
 # D1 Database binding (will be set via wrangler secret or CI)
-# d1_databases = [
-#   { binding = "DB", database_name = "escriturashoy-staging-db", database_id = "YOUR_D1_DATABASE_ID" }
-# ]
+d1_databases = [
+  { binding = "DB", database_name = "escriturashoy-staging-db", database_id = "YOUR_D1_DATABASE_ID" }
+]
 
 # KV Namespace binding (will be set via wrangler secret or CI)
 # kv_namespaces = [
@@ -34,6 +34,6 @@ VERSION = "0.1.0"
 # name = "escriturashoy-api"
 # routes = [
 #   { pattern = "api.escriturashoy.com/*", zone_name = "escriturashoy.com" }
-# ]
+]
 # [env.production.vars]
 # ENVIRONMENT = "production"
