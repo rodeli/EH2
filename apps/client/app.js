@@ -66,19 +66,35 @@ async function loadExpedientes() {
   const emptyState = document.getElementById('empty-state');
 
   try {
-    // For now, show empty state since we don't have expedientes yet
-    // In production, this would call: GET /expedientes?client_id=...
-    listElement.innerHTML = '';
-    emptyState.style.display = 'block';
+    listElement.innerHTML = '<div class="loading">Cargando expedientes...</div>';
+    emptyState.style.display = 'none';
 
-    // Example of what the API call would look like:
-    // const response = await fetch(`${API_BASE_URL}/expedientes?client_id=${currentUser.id}`);
-    // const data = await response.json();
-    // renderExpedientes(data.expedientes);
+    // Build query params
+    const params = new URLSearchParams({ limit: '50' });
+    // TODO: Add client_id filter when authentication is implemented
+    // if (currentUser?.id) {
+    //   params.append('client_id', currentUser.id);
+    // }
 
+    const response = await fetch(`${API_BASE_URL}/expedientes?${params}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    if (result.success && result.data) {
+      renderExpedientes(result.data);
+    } else {
+      throw new Error('Invalid response format');
+    }
   } catch (error) {
     console.error('Error loading expedientes:', error);
-    listElement.innerHTML = '<div class="loading">Error al cargar expedientes</div>';
+    listElement.innerHTML = '';
+    emptyState.style.display = 'block';
+    emptyState.innerHTML = `
+      <p>Error al cargar expedientes: ${error.message}</p>
+      <p>Verifica que la API esté disponible.</p>
+    `;
   }
 }
 

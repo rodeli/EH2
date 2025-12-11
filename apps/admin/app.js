@@ -12,23 +12,29 @@ async function loadLeads() {
   const container = document.getElementById('leads-table-container');
 
   try {
-    // For now, show empty state since we don't have a GET /leads endpoint yet
-    // In production, this would call: GET /leads
-    container.innerHTML = `
-      <div class="empty-state">
-        <p>No hay leads disponibles.</p>
-        <p>Los leads aparecerán aquí cuando se creen desde el formulario público.</p>
-      </div>
-    `;
+    container.innerHTML = '<div class="loading">Cargando leads...</div>';
 
-    // Example of what the API call would look like:
-    // const response = await fetch(`${API_BASE_URL}/leads`);
-    // const data = await response.json();
-    // renderLeads(data.leads);
+    const response = await fetch(`${API_BASE_URL}/leads?limit=20`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
+    const result = await response.json();
+    if (result.success && result.data) {
+      renderLeads(result.data);
+      return result.data;
+    } else {
+      throw new Error('Invalid response format');
+    }
   } catch (error) {
     console.error('Error loading leads:', error);
-    container.innerHTML = '<div class="loading">Error al cargar leads</div>';
+    container.innerHTML = `
+      <div class="empty-state">
+        <p>Error al cargar leads: ${error.message}</p>
+        <p>Verifica que la API esté disponible.</p>
+      </div>
+    `;
+    return [];
   }
 }
 
@@ -82,23 +88,29 @@ async function loadExpedientes() {
   const container = document.getElementById('expedientes-table-container');
 
   try {
-    // For now, show empty state
-    // In production, this would call: GET /expedientes
-    container.innerHTML = `
-      <div class="empty-state">
-        <p>No hay expedientes disponibles.</p>
-        <p>Los expedientes aparecerán aquí cuando se creen.</p>
-      </div>
-    `;
+    container.innerHTML = '<div class="loading">Cargando expedientes...</div>';
 
-    // Example of what the API call would look like:
-    // const response = await fetch(`${API_BASE_URL}/expedientes`);
-    // const data = await response.json();
-    // renderExpedientes(data.expedientes);
+    const response = await fetch(`${API_BASE_URL}/expedientes?limit=20`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
+    const result = await response.json();
+    if (result.success && result.data) {
+      renderExpedientes(result.data);
+      return result.data;
+    } else {
+      throw new Error('Invalid response format');
+    }
   } catch (error) {
     console.error('Error loading expedientes:', error);
-    container.innerHTML = '<div class="loading">Error al cargar expedientes</div>';
+    container.innerHTML = `
+      <div class="empty-state">
+        <p>Error al cargar expedientes: ${error.message}</p>
+        <p>Verifica que la API esté disponible.</p>
+      </div>
+    `;
+    return [];
   }
 }
 
@@ -148,17 +160,28 @@ function renderExpedientes(expedientes) {
  */
 function updateStats(leads, expedientes) {
   document.getElementById('leads-count').textContent = leads?.length || 0;
-  document.getElementById('expedientes-count').textContent = expedientes?.length || 0;
-  // Calculate new this week (placeholder)
-  document.getElementById('new-count').textContent = '-';
+  
+  // Count active expedientes
+  const activeExpedientes = expedientes?.filter(e => e.status === 'activo') || [];
+  document.getElementById('expedientes-count').textContent = activeExpedientes.length;
+  
+  // Calculate new this week
+  const weekAgo = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60);
+  const newThisWeek = leads?.filter(l => l.created_at >= weekAgo).length || 0;
+  document.getElementById('new-count').textContent = newThisWeek;
 }
 
 /**
  * Initialize app
  */
-document.addEventListener('DOMContentLoaded', () => {
-  loadLeads();
-  loadExpedientes();
-  // updateStats(leads, expedientes);
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load data in parallel
+  const [leads, expedientes] = await Promise.all([
+    loadLeads(),
+    loadExpedientes()
+  ]);
+  
+  // Update stats with loaded data
+  updateStats(leads, expedientes);
 });
 
