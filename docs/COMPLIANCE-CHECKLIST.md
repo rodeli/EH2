@@ -44,9 +44,9 @@ No proporcionamos asesoría legal. Para asesoría legal, consulte con un notario
 - ✅ **Privacy Policy Link**: Present in lead form
 - ✅ **Consent Checkbox**: Required for form submission
 - ✅ **Data Collection Notice**: Implicit in form fields
-- ⚠️ **ARCO Rights**: To be implemented (Access, Rectification, Cancellation, Opposition)
-- ⚠️ **Privacy Policy Page**: `/privacidad` page to be created
-- ⚠️ **Terms of Service Page**: `/terminos` page to be created
+- ⚠️ **ARCO Rights**: Interface to be implemented (information provided in privacy policy)
+- ✅ **Privacy Policy Page**: `/privacidad` page created with full LFPDPPP compliance
+- ✅ **Terms of Service Page**: `/terminos` page created
 
 ### Data Minimization
 
@@ -91,19 +91,19 @@ No proporcionamos asesoría legal. Para asesoría legal, consulte con un notario
 |-------------|--------|-------|
 | Non-Legal Advice Disclaimer | ✅ | Present on public site |
 | Privacy Consent | ✅ | Required checkbox in form |
-| Privacy Policy Link | ✅ | Link present (page to be created) |
-| Terms of Service Link | ✅ | Link present (page to be created) |
-| ARCO Rights | ⚠️ | To be implemented |
+| Privacy Policy Link | ✅ | Link present and page created |
+| Terms of Service Link | ✅ | Link present and page created |
+| ARCO Rights | ⚠️ | Information provided, interface to be implemented |
 | NOM-151 Compliance | ⚠️ | Signatures to be implemented |
-| LFPDPPP Compliance | ⚠️ | Partial - needs privacy policy page |
+| LFPDPPP Compliance | ✅ | Complete - privacy policy page includes all requirements |
 | Form Validation | ✅ | Client-side validation complete |
 | API Tests | ✅ | Basic tests implemented |
 
 ## Next Steps
 
-1. Create `/privacidad` page with full privacy policy
-2. Create `/terminos` page with terms of service
-3. Implement ARCO rights functionality
+1. ✅ Create `/privacidad` page with full privacy policy - Complete
+2. ✅ Create `/terminos` page with terms of service - Complete
+3. Implement ARCO rights user interface (API endpoint to be added)
 4. Add E2E tests for lead form
 5. Complete NOM-151 signature implementation
 

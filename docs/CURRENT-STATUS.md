@@ -1,6 +1,6 @@
 # Current Status - Escriturashoy 2.0
 
-**Last Updated:** 2025-12-11
+**Last Updated:** 2025-12-11 (Updated with latest progress)
 
 ## Milestones Completed
 
@@ -18,10 +18,11 @@
 
 ### ✅ Milestone 3: App Skeletons & First Real Workflow
 - Database schema and migrations
-- API endpoints (POST /leads, GET /expedientes/:id)
+- API endpoints (POST /leads, GET /leads, GET /expedientes, GET /expedientes/:id)
 - Marketing site with lead form
-- Client portal skeleton
-- Admin portal skeleton
+- Client portal with API integration
+- Admin portal with API integration
+- Privacy policy and terms of service pages
 - Tests and compliance checks
 
 ## Current State
@@ -36,19 +37,28 @@
 2. **Client Portal** (`apps/client`)
    - ✅ Login interface
    - ✅ Expedientes dashboard
-   - ✅ Ready for API integration
+   - ✅ Connected to API (GET /expedientes)
+   - ✅ Real-time data display
    - ✅ Builds successfully
 
 3. **Admin Portal** (`apps/admin`)
    - ✅ Dashboard with stats
    - ✅ Leads and expedientes tables
-   - ✅ Ready for API integration
+   - ✅ Connected to API (GET /leads, GET /expedientes)
+   - ✅ Real-time data display with stats
    - ✅ Builds successfully
 
 ### API
 - **Worker** (`apps-api/workers`)
-   - ✅ Endpoints implemented
+   - ✅ All endpoints implemented:
+     - GET /health
+     - GET /version
+     - POST /leads (create lead)
+     - GET /leads (list with pagination)
+     - GET /expedientes (list with pagination)
+     - GET /expedientes/:id (get by ID)
    - ✅ Database connected
+   - ✅ Pagination and filtering support
    - ✅ Tests passing (6/6)
    - ✅ TypeScript compilation successful
 
@@ -60,7 +70,10 @@
 ### Infrastructure
 - ✅ Terraform configuration complete
 - ✅ CI/CD workflows configured
-- ⚠️ Terraform not yet applied (requires credentials)
+- ✅ Automatic resource import in CI
+- ✅ R2 import format fixed (with jurisdiction)
+- ✅ Pages domain import added
+- ⚠️ Terraform deployment pending (waiting for successful CI run)
 
 ## Pending Milestones
 
@@ -85,10 +98,11 @@
 4. **Test end-to-end** lead capture flow
 
 ### Short-term
-1. **Create privacy policy page** (`/privacidad`)
-2. **Create terms of service page** (`/terminos`)
-3. **Implement GET /leads** endpoint for admin
-4. **Implement GET /expedientes** endpoint (list)
+1. ✅ **Create privacy policy page** (`/privacidad`) - Complete
+2. ✅ **Create terms of service page** (`/terminos`) - Complete
+3. ✅ **Implement GET /leads** endpoint for admin - Complete
+4. ✅ **Implement GET /expedientes** endpoint (list) - Complete
+5. ✅ **Connect portals to API** - Complete
 
 ### Medium-term
 1. **Complete Milestone 2** (observability)
@@ -117,11 +131,19 @@
 - ✅ Compliance elements verified
 - ⚠️ E2E tests: Structure created, needs implementation
 
+## Recent Accomplishments (2025-12-11)
+
+1. ✅ **API Endpoints**: Added GET /leads and GET /expedientes with pagination
+2. ✅ **Frontend Integration**: Connected admin and client portals to API
+3. ✅ **Compliance Pages**: Created /privacidad and /terminos pages
+4. ✅ **Terraform Fixes**: Fixed R2 import format, added Pages domain import
+5. ✅ **Documentation**: Consolidated and updated all documentation
+
 ## Known Issues
 
-1. **Terraform variables**: Fixed variable names (cloudflare_account_id, zone_id, project_name, environment)
-2. **Database binding**: Configured in wrangler.toml
-3. **Privacy/Terms pages**: Links present but pages not created yet
+1. **Terraform deployment**: Waiting for successful CI run with proper API token permissions
+2. **ARCO Rights**: Interface for users to exercise ARCO rights to be implemented
+3. **Authentication**: Client portal uses mock authentication (real auth pending)
 
 ## Repository Health
 
