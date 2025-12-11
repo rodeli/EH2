@@ -48,7 +48,7 @@ If your current token doesn't have all permissions, create a new one:
    - **Account** → **Workers R2 Storage** → **Edit** ✅ You have this (this is R2)
    - **Zone** → **DNS** → **Edit** ✅ You have this (select `escriturashoy.com`)
    - **Zone** → **Zone** → **Read** ✅ You have this (select `escriturashoy.com`)
-   
+
    **Note:** You can ignore "Workers R2 Data Catalog" and "Workers R2 SQL" - those are optional.
 
    **Account Resources:**
@@ -110,6 +110,11 @@ After updating the token, check the Terraform workflow:
 - In the Cloudflare API token UI, R2 permissions are listed as **"Workers R2 Storage"** (not "R2" or "Object Storage")
 - Look for: **Account** → **Workers R2 Storage** → **Edit**
 - This permission allows creating and managing R2 buckets
+
+### Import format errors
+- **R2 Bucket:** Requires jurisdiction: `account_id/bucket_name/jurisdiction` (usually `default`)
+- **Pages Domain:** Format: `account_id/project_name/domain_name`
+- See `docs/IMPORT-RESOURCES.md` for all import formats
 
 ### Missing Cloudflare Pages permission
 - If you see `403 Forbidden` for Pages resources, you're missing: **Account** → **Cloudflare Pages** → **Edit**
