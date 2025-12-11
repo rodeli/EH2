@@ -11,6 +11,7 @@ resource "cloudflare_dns_record" "staging_pages" {
   type    = "CNAME"
   content = "staging.pages.dev"
   proxied = true
+  ttl     = 1  # Auto TTL when proxied
   comment = "Staging Pages site for apps/public"
 }
 

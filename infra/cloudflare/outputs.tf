@@ -20,7 +20,7 @@ output "pages_url" {
 
 output "pages_staging_domain" {
   description = "Staging Pages custom domain"
-  value       = cloudflare_pages_domain.public_staging_domain.domain
+  value       = cloudflare_pages_domain.public_staging_domain.name
 }
 
 output "d1_database_name" {
