@@ -11,6 +11,7 @@ on:
     paths:
       - "infra/cloudflare/**"
       - ".github/workflows/terraform.yml"
+  workflow_dispatch:  # Allow manual triggering
 
 env:
   TF_VERSION: "1.6.0"
