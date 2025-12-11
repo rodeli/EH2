@@ -21,7 +21,7 @@ fi
 # Get D1 Database ID
 echo "📊 Getting D1 database ID..."
 DB_NAME="escriturashoy-staging-db"
-DB_ID=$(wrangler d1 list --json 2>/dev/null | jq -r ".[] | select(.name == \"$DB_NAME\") | .uuid" || echo "")
+DB_ID=$(wrangler d1 list --output json 2>/dev/null | jq -r ".[] | select(.name == \"$DB_NAME\") | .uuid" || echo "")
 
 if [ -z "$DB_ID" ]; then
   echo "⚠️  D1 database '$DB_NAME' not found"
@@ -34,7 +34,7 @@ fi
 # Get KV Namespace ID
 echo "📊 Getting KV namespace ID..."
 KV_TITLE="escriturashoy-staging-config"
-KV_ID=$(wrangler kv:namespace list --json 2>/dev/null | jq -r ".[] | select(.title == \"$KV_TITLE\") | .id" || echo "")
+KV_ID=$(wrangler kv:namespace list --output json 2>/dev/null | jq -r ".[] | select(.title == \"$KV_TITLE\") | .id" || echo "")
 
 if [ -z "$KV_ID" ]; then
   echo "⚠️  KV namespace '$KV_TITLE' not found"
@@ -47,7 +47,7 @@ fi
 # Get R2 Bucket name (we already know it, but verify it exists)
 echo "📊 Verifying R2 bucket..."
 R2_BUCKET="escriturashoy-staging-docs"
-R2_EXISTS=$(wrangler r2 bucket list --json 2>/dev/null | jq -r ".[] | select(.name == \"$R2_BUCKET\") | .name" || echo "")
+R2_EXISTS=$(wrangler r2 bucket list --output json 2>/dev/null | jq -r ".[] | select(.name == \"$R2_BUCKET\") | .name" || echo "")
 
 if [ -z "$R2_EXISTS" ]; then
   echo "⚠️  R2 bucket '$R2_BUCKET' not found"
@@ -65,7 +65,7 @@ cp "$WRANGLER_TOML" "$WRANGLER_TOML.bak"
 # Update D1 database binding
 if [ -n "$DB_ID" ]; then
   echo "  → Updating D1 database binding..."
-  
+
   # Check if d1_databases section exists and is commented
   if grep -q "^# d1_databases = \[" "$WRANGLER_TOML"; then
     # Uncomment and update
@@ -105,7 +105,7 @@ fi
 # Update KV namespace binding
 if [ -n "$KV_ID" ]; then
   echo "  → Updating KV namespace binding..."
-  
+
   # Check if kv_namespaces section exists and is commented
   if grep -q "^# kv_namespaces = \[" "$WRANGLER_TOML"; then
     # Uncomment and update
@@ -144,7 +144,7 @@ fi
 # Update R2 bucket binding
 if [ -n "$R2_EXISTS" ]; then
   echo "  → Updating R2 bucket binding..."
-  
+
   # Check if r2_buckets section exists and is commented
   if grep -q "^# r2_buckets = \[" "$WRANGLER_TOML"; then
     # Uncomment and update
