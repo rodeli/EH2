@@ -38,13 +38,17 @@ fi
 echo "✅ Found database ID: $DB_ID"
 echo ""
 
-# Get account ID from Terraform variables or ask user
-if [ -f "terraform.tfvars" ]; then
+# Get account ID from environment variable, Terraform variables, or ask user
+if [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+  ACCOUNT_ID="$CLOUDFLARE_ACCOUNT_ID"
+  echo "✅ Using Account ID from environment variable"
+elif [ -f "terraform.tfvars" ]; then
   ACCOUNT_ID=$(grep "cloudflare_account_id" terraform.tfvars | cut -d'"' -f2 || echo "")
 fi
 
 if [ -z "$ACCOUNT_ID" ]; then
   echo "Please enter your Cloudflare Account ID:"
+  echo "  (You can find it in GitHub Secrets or Cloudflare Dashboard)"
   read -r ACCOUNT_ID
 fi
 
@@ -72,4 +76,5 @@ else
   echo "❌ Import failed. Please check the error above."
   exit 1
 fi
+
 
