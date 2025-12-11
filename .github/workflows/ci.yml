@@ -4,9 +4,17 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'apps/**'
+      - 'apps-api/**'
+      - '.github/workflows/ci.yml'
   push:
     branches:
       - main
+    paths:
+      - 'apps/**'
+      - 'apps-api/**'
+      - '.github/workflows/ci.yml'
 
 env:
   NODE_VERSION: '20'

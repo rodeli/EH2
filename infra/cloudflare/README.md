@@ -5,7 +5,7 @@ This directory contains Terraform configurations for managing all Cloudflare res
 ## Prerequisites
 
 1. Cloudflare account with API token
-2. Terraform >= 1.5.0
+2. Terraform >= 1.6.0
 3. Cloudflare zone `escriturashoy.com` must already exist
 
 ## Required Variables

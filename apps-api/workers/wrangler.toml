@@ -1,0 +1,40 @@
+name = "escriturashoy-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+# Environment: staging
+[env.staging]
+name = "escriturashoy-api-staging"
+routes = [
+  { pattern = "api-staging.escriturashoy.com/*", zone_name = "escriturashoy.com" }
+]
+
+# D1 Database binding
+d1_databases = [
+  { binding = "DB", database_name = "escriturashoy-staging-db", database_id = "c4d93a6a-1245-4a9f-9543-fa546f25d5c0" }
+]
+
+# KV Namespace binding (will be set via wrangler secret or CI)
+# kv_namespaces = [
+#   { binding = "CONFIG", id = "YOUR_KV_NAMESPACE_ID" }
+# ]
+
+# R2 Bucket binding (will be set via wrangler secret or CI)
+# r2_buckets = [
+#   { binding = "DOCS", bucket_name = "esh-docs-staging" }
+# ]
+
+# Environment variables
+[env.staging.vars]
+ENVIRONMENT = "staging"
+VERSION = "0.1.0"
+
+# Production environment (for future use)
+# [env.production]
+# name = "escriturashoy-api"
+# routes = [
+#   { pattern = "api.escriturashoy.com/*", zone_name = "escriturashoy.com" }
+# ]
+# [env.production.vars]
+# ENVIRONMENT = "production"
+

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Escriturashoy - Escrituras digitales en México. Plataforma segura y confiable para transacciones inmobiliarias digitales.">
+  <title>Escriturashoy – Escrituras digitales en México</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">Escriturashoy</h1>
+      <nav class="nav">
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#seguridad">Seguridad</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h2 class="hero-title">Escrituras digitales en México</h2>
+        <p class="hero-subtitle">
+          Plataforma segura y confiable para transacciones inmobiliarias digitales.
+          Simplificamos el proceso de escrituración con tecnología de vanguardia.
+        </p>
+        <a href="#solicitar-info" class="cta-button">Solicitar información</a>
+      </div>
+    </section>
+
+    <section id="solicitar-info" class="section section-form">
+      <div class="container">
+        <h2 class="section-title">Solicita información</h2>
+        <p class="section-subtitle">
+          Completa el formulario y nos pondremos en contacto contigo a la brevedad.
+        </p>
+
+        <form id="lead-form" class="lead-form">
+          <div class="form-group">
+            <label for="name">Nombre completo *</label>
+            <input type="text" id="name" name="name" required>
+            <span class="error-message" id="name-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo electrónico *</label>
+            <input type="email" id="email" name="email" required>
+            <span class="error-message" id="email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Teléfono</label>
+            <input type="tel" id="phone" name="phone" placeholder="+52 55 1234 5678">
+            <span class="error-message" id="phone-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="property_location">Ubicación de la propiedad *</label>
+            <input type="text" id="property_location" name="property_location" required placeholder="Ciudad, Estado">
+            <span class="error-message" id="property_location-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="property_type">Tipo de propiedad *</label>
+            <select id="property_type" name="property_type" required>
+              <option value="">Selecciona una opción</option>
+              <option value="casa">Casa</option>
+              <option value="departamento">Departamento</option>
+              <option value="terreno">Terreno</option>
+              <option value="comercial">Comercial</option>
+            </select>
+            <span class="error-message" id="property_type-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="urgency">Urgencia</label>
+            <select id="urgency" name="urgency">
+              <option value="">Selecciona una opción</option>
+              <option value="alta">Alta</option>
+              <option value="media">Media</option>
+              <option value="baja">Baja</option>
+            </select>
+            <span class="error-message" id="urgency-error"></span>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="privacy_consent" name="privacy_consent" required>
+              <span>Acepto la <a href="/privacidad" target="_blank">Política de Privacidad</a> y el tratamiento de mis datos personales *</span>
+            </label>
+            <span class="error-message" id="privacy_consent-error"></span>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="legal_disclaimer" name="legal_disclaimer" required>
+              <span>Entiendo que Escriturashoy proporciona servicios tecnológicos y no asesoría legal *</span>
+            </label>
+            <span class="error-message" id="legal_disclaimer-error"></span>
+          </div>
+
+          <div id="form-message" class="form-message"></div>
+
+          <button type="submit" class="submit-button" id="submit-button">
+            <span class="button-text">Enviar solicitud</span>
+            <span class="button-loading" style="display: none;">Enviando...</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="section">
+      <div class="container">
+        <h2 class="section-title">Cómo funciona</h2>
+        <div class="features">
+          <div class="feature">
+            <h3>1. Registro</h3>
+            <p>Completa tu información y crea tu cuenta de forma rápida y segura.</p>
+          </div>
+          <div class="feature">
+            <h3>2. Documentación</h3>
+            <p>Sube los documentos necesarios de manera digital y segura.</p>
+          </div>
+          <div class="feature">
+            <h3>3. Procesamiento</h3>
+            <p>Nuestro equipo revisa y procesa tu expediente de forma eficiente.</p>
+          </div>
+          <div class="feature">
+            <h3>4. Firma digital</h3>
+            <p>Firma tus documentos de forma legal y segura con tecnología blockchain.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="seguridad" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Seguridad y cumplimiento</h2>
+        <div class="compliance">
+          <div class="compliance-item">
+            <h3>NOM-151</h3>
+            <p>Cumplimiento total con la Norma Oficial Mexicana 151 para firmas electrónicas avanzadas.</p>
+          </div>
+          <div class="compliance-item">
+            <h3>LFPDPPP</h3>
+            <p>Protección de datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.</p>
+          </div>
+          <div class="compliance-item">
+            <h3>Encriptación</h3>
+            <p>Todos los documentos y datos están encriptados en tránsito y en reposo.</p>
+          </div>
+          <div class="compliance-item">
+            <h3>Auditoría</h3>
+            <p>Registros completos de auditoría para trazabilidad y cumplimiento legal.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto" class="section">
+      <div class="container">
+        <h2 class="section-title">Contacto</h2>
+        <div class="contact">
+          <p>¿Tienes preguntas? Estamos aquí para ayudarte.</p>
+          <p class="contact-note">
+            <strong>Nota:</strong> Esta plataforma proporciona servicios tecnológicos para escrituración digital.
+            No proporcionamos asesoría legal. Para asesoría legal, consulte con un notario público o abogado calificado.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Escriturashoy. Todos los derechos reservados.</p>
+      <p class="footer-links">
+        <a href="/privacidad">Política de Privacidad</a>
+        <a href="/terminos">Términos de Servicio</a>
+      </p>
+    </div>
+  </footer>
+
+  <script type="module" src="/form.js"></script>
+</body>
+</html>

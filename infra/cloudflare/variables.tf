@@ -4,9 +4,26 @@ variable "cloudflare_api_token" {
   sensitive   = true
 }
 
-variable "account_id" {
+variable "cloudflare_account_id" {
   description = "Cloudflare account ID"
   type        = string
+}
+
+variable "zone_id" {
+  description = "Cloudflare zone ID for escriturashoy.com"
+  type        = string
+}
+
+variable "project_name" {
+  description = "Project name used for resource naming"
+  type        = string
+  default     = "escriturashoy"
+}
+
+variable "environment" {
+  description = "Environment name (staging, production)"
+  type        = string
+  default     = "staging"
 }
 
 variable "zone_name" {

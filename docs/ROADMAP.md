@@ -116,7 +116,7 @@ Timeline is indicative. Adjust as needed.
 - **Acceptance Criteria:**
   - Local dev with `wrangler dev` works.
   - Staging deploy possible via CI (even if manual for now).
-- **Status:** ⏳ Pending
+- **Status:** ✅ Complete
 
 **M1-T3 – Staging Pages project for marketing**
 
@@ -129,7 +129,7 @@ Timeline is indicative. Adjust as needed.
 - **Acceptance Criteria:**
   - `staging.escriturashoy.com` (or similar) shows the minimal site.
   - Build pipeline in CI is green.
-- **Status:** ⏳ Pending (Terraform config complete, Pages app pending)
+- **Status:** ✅ Complete
 
 **M1-T4 – CI integration for Terraform and deploys**
 
@@ -238,7 +238,7 @@ Timeline is indicative. Adjust as needed.
 - **Acceptance Criteria:**
   - Migrations run successfully on staging.
   - ERD or schema diagram committed.
-- **Status:** ⏳ Pending
+- **Status:** ✅ Complete
 
 **M3-T2 – API endpoints for leads and expedientes**
 
@@ -253,7 +253,7 @@ Timeline is indicative. Adjust as needed.
   - Automated tests cover at least:
     - Create lead → stored in DB.
     - Fetch expediente (mocked or minimal real data).
-- **Status:** ⏳ Pending
+- **Status:** ✅ Complete
 
 **M3-T3 – Marketing site lead form**
 
@@ -266,7 +266,7 @@ Timeline is indicative. Adjust as needed.
 - **Acceptance Criteria:**
   - End-to-end test validates lead creation via the form.
   - Basic responsive layout.
-- **Status:** ⏳ Pending
+- **Status:** ✅ Complete
 
 **M3-T4 – Client & admin skeletons**
 
@@ -281,7 +281,7 @@ Timeline is indicative. Adjust as needed.
 - **Acceptance Criteria:**
   - Both apps build and deploy to staging (under different subpaths or subdomains).
   - Basic navigation and layout exist; no full functionality needed yet.
-- **Status:** ⏳ Pending
+- **Status:** ✅ Complete
 
 **M3-T5 – Tests & compliance checks**
 
@@ -296,7 +296,7 @@ Timeline is indicative. Adjust as needed.
 - **Acceptance Criteria:**
   - CI passes all tests.
   - PRs adding user-facing flows are blocked if disclaimers are missing.
-- **Status:** ⏳ Pending
+- **Status:** ✅ Complete
 
 ---
 

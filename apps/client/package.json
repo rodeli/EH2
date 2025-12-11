@@ -1,0 +1,22 @@
+{
+  "name": "@escriturashoy/client",
+  "version": "0.1.0",
+  "description": "Escriturashoy client portal",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "escriturashoy",
+    "client",
+    "portal"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
+

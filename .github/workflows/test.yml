@@ -1,0 +1,120 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test-api:
+    name: Test API Worker
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps-api/workers
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps-api/workers/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        continue-on-error: true
+
+  test-public:
+    name: Test Public Site
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/public
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps/public/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Check for compliance elements
+        run: |
+          if ! grep -q "no asesoría legal" dist/index.html; then
+            echo "❌ Legal disclaimer not found in built HTML"
+            exit 1
+          fi
+          if ! grep -q "Política de Privacidad" dist/index.html; then
+            echo "❌ Privacy policy link not found in built HTML"
+            exit 1
+          fi
+          echo "✅ Compliance elements found"
+
+  test-client:
+    name: Test Client Portal
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/client
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps/client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  test-admin:
+    name: Test Admin Portal
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/admin
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps/admin/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+

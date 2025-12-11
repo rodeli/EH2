@@ -1,0 +1,22 @@
+{
+  "name": "@escriturashoy/public",
+  "version": "0.1.0",
+  "description": "Escriturashoy public marketing site",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "escriturashoy",
+    "marketing",
+    "landing-page"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
+

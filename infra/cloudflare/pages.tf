@@ -5,9 +5,9 @@ resource "cloudflare_pages_project" "public_staging" {
   production_branch = "main"
 
   build_config {
-    build_command   = "npm run build"
-    destination_dir = ".next"
-    root_dir        = "/"
+    build_command   = "npm install && npm run build"
+    destination_dir = "dist"
+    root_dir        = "apps/public"
   }
 
   deployment_configs {

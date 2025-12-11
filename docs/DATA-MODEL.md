@@ -14,47 +14,68 @@ The primary transactional database is Cloudflare D1, a SQLite-compatible databas
 
 User accounts for system access (admin, staff, etc.).
 
-**Schema**: TBD - See `db/schema/` for detailed schema definitions.
+**Schema**: See `db/schema/core.md` for detailed schema definitions.
 
 ### Clients
 
 Client records representing customers using the platform.
 
-**Schema**: TBD - See `db/schema/` for detailed schema definitions.
+**Schema**: See `db/schema/core.md` for detailed schema definitions.
 
 ### Leads
 
 Lead records from marketing intake forms.
 
-**Schema**: TBD - See `db/schema/` for detailed schema definitions.
+**Schema**: See `db/schema/core.md` for detailed schema definitions.
+
+**Status Flow**: `nuevo` → `contactado` → `convertido` or `perdido`
 
 ### Expedientes
 
 Case records representing real estate transactions.
 
-**Schema**: TBD - See `db/schema/` for detailed schema definitions.
+**Schema**: See `db/schema/core.md` for detailed schema definitions.
 
-**Status Flow**: TBD
+**Status Flow**: `inicial` → `documentacion` → `revision` → `firma` → `cerrado` (or `cancelado` at any stage)
 
 ### Documents
 
 Document metadata and references.
 
-**Schema**: TBD - See `db/schema/` for detailed schema definitions.
+**Schema**: TBD - To be added in future migration.
 
 **Storage**: Files stored in Cloudflare R2, metadata in D1.
 
 ## Relationships
 
-TBD - ERD to be added when schemas are defined.
+See `db/schema/core.md` for the complete Entity Relationship Diagram (ERD).
+
+**Key Relationships:**
+- Users → Clients (1:N) - A user can have multiple client records
+- Clients → Expedientes (1:N) - A client can have multiple expedientes
+- Leads → Expedientes (1:1) - A lead can be converted to an expediente
 
 ## Data Retention
 
-TBD - Retention policies to be defined per compliance requirements.
+TBD - Retention policies to be defined per compliance requirements (NOM-151, LFPDPPP).
 
 ## Migrations
 
 All schema changes are managed via migrations in `db/migrations/`.
 
-See migration files for detailed change history.
+**Current Migrations:**
+- `001_initial_schema.sql` - Initial core schema (users, clients, leads, expedientes)
+
+See `db/migrations/README.md` for migration guidelines and how to run migrations.
+
+## Schema Documentation
+
+For complete schema documentation including:
+- Entity Relationship Diagrams
+- Table definitions with all columns
+- Indexes
+- Status enums
+- Data types
+
+See: `db/schema/core.md`
 

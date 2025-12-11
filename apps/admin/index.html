@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Escriturashoy - Portal de Administración">
+  <title>Portal de Administración - Escriturashoy</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">Escriturashoy Admin</h1>
+      <nav class="nav">
+        <a href="/" class="nav-link active">Dashboard</a>
+        <a href="/leads" class="nav-link">Leads</a>
+        <a href="/expedientes" class="nav-link">Expedientes</a>
+        <span class="user-info">Admin</span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2 class="page-title">Dashboard</h2>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Leads</h3>
+          <p class="stat-number" id="leads-count">-</p>
+          <p class="stat-label">Total</p>
+        </div>
+        <div class="stat-card">
+          <h3>Expedientes</h3>
+          <p class="stat-number" id="expedientes-count">-</p>
+          <p class="stat-label">Activos</p>
+        </div>
+        <div class="stat-card">
+          <h3>Nuevos</h3>
+          <p class="stat-number" id="new-count">-</p>
+          <p class="stat-label">Esta semana</p>
+        </div>
+      </div>
+
+      <section class="section">
+        <h3 class="section-title">Leads Recientes</h3>
+        <div id="leads-table-container" class="table-container">
+          <div class="loading">Cargando leads...</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h3 class="section-title">Expedientes Recientes</h3>
+        <div id="expedientes-table-container" class="table-container">
+          <div class="loading">Cargando expedientes...</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Escriturashoy. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
+
