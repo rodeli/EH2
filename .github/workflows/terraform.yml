@@ -143,9 +143,9 @@ jobs:
             echo "✅ D1 database imported"
           fi
 
-          # Import R2 bucket (format: account_id/bucket_name)
+          # Import R2 bucket (format: account_id/bucket_name/jurisdiction)
           echo "Importing R2 bucket..."
-          terraform import cloudflare_r2_bucket.docs ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-staging-docs 2>&1 | tee /tmp/r2-import.log
+          terraform import cloudflare_r2_bucket.docs ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-staging-docs/default 2>&1 | tee /tmp/r2-import.log
           if grep -q "already managed" /tmp/r2-import.log; then
             echo "✅ R2 bucket already in state"
           elif grep -q "Error" /tmp/r2-import.log; then

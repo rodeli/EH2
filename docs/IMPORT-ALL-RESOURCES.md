@@ -4,7 +4,7 @@
 
 Terraform is trying to create resources that already exist, causing these errors:
 - D1 database already exists
-- KV namespace already exists  
+- KV namespace already exists
 - R2 bucket already exists
 - DNS record already exists
 
@@ -51,8 +51,11 @@ wrangler kv:namespace list | grep "escriturashoy-staging-config"
 #### 3. R2 Bucket
 
 ```bash
-terraform import cloudflare_r2_bucket.docs <account_id>/escriturashoy-staging-docs
+# Format: account_id/bucket_name/jurisdiction
+terraform import cloudflare_r2_bucket.docs <account_id>/escriturashoy-staging-docs/default
 ```
+
+**Note:** The jurisdiction is usually `default` for most buckets. If you get an error, check your bucket's jurisdiction in the Cloudflare dashboard.
 
 #### 4. DNS Record
 
@@ -77,7 +80,7 @@ terraform import cloudflare_dns_record.staging_pages <zone_id>/staging/CNAME
    ```bash
    terraform plan
    ```
-   
+
    You should see:
    - ✅ Imported resources: No changes
    - ⚠️  Remaining resources: Will be created (Pages project, etc.)

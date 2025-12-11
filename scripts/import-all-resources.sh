@@ -90,7 +90,8 @@ echo ""
 # 3. Import R2 Bucket
 echo "3️⃣  Importing R2 bucket..."
 R2_BUCKET_NAME="escriturashoy-staging-docs"
-if terraform import cloudflare_r2_bucket.docs "$ACCOUNT_ID/$R2_BUCKET_NAME" 2>&1 | grep -q "Error"; then
+# Format: account_id/bucket_name/jurisdiction (jurisdiction is usually "default")
+if terraform import cloudflare_r2_bucket.docs "$ACCOUNT_ID/$R2_BUCKET_NAME/default" 2>&1 | grep -q "Error"; then
   echo "   ⚠️  R2 bucket may already be imported or error occurred"
 else
   echo "   ✅ R2 bucket imported"
