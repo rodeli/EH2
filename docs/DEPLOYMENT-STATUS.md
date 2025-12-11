@@ -30,13 +30,14 @@
 - ✅ All tables created (users, clients, leads, expedientes)
 - ✅ Worker bindings configured
 
-## ⏳ Pending Deployments
+## ✅ Completed Deployments
 
 ### Pages Projects
-- ⏳ **Public Site** (`apps/public`)
+- ✅ **Public Site** (`apps/public`)
   - Project created by Terraform
-  - Needs: GitHub repo connection + build configuration
-  - Expected URL: `https://staging.escriturashoy.com`
+  - Deployed via Wrangler Pages
+  - Live at: `https://staging.escriturashoy.com`
+  - Pages.dev: `https://47c6e210.escriturashoy-public-staging.pages.dev`
 
 - ⏳ **Client Portal** (`apps/client`)
   - Not yet configured in Terraform
@@ -76,14 +77,29 @@ wrangler d1 execute escriturashoy-staging-db \
   --remote
 ```
 
-## 📋 Next Steps
+## ✅ End-to-End Testing
 
-### Immediate
-1. **Verify Pages Deployment:**
-   - Check Cloudflare Dashboard → Pages
-   - Verify `escriturashoy-public-staging` project exists
-   - Check if custom domain `staging.escriturashoy.com` is configured
-   - Verify site is accessible
+### Completed Tests
+- ✅ API health check: Working
+- ✅ API version endpoint: Working
+- ✅ Lead creation via API: Working
+- ✅ Lead retrieval via API: Working
+- ✅ Pages site accessibility: HTTP 200
+- ✅ Custom domain: Working
+
+### Manual Testing Required
+1. **Test Lead Form:**
+   - Visit: https://staging.escriturashoy.com
+   - Fill out and submit the lead form
+   - Verify success message appears
+   - Check lead appears in API: `curl https://api-staging.escriturashoy.com/leads`
+
+2. **Test Privacy/Terms Pages:**
+   - Visit: https://staging.escriturashoy.com/privacidad
+   - Visit: https://staging.escriturashoy.com/terminos
+   - Verify pages load correctly
+
+## 📋 Next Steps
 
 2. **Configure Pages Build (if needed):**
    - Connect GitHub repository
