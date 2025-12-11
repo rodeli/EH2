@@ -34,7 +34,6 @@ jobs:
           - apps/admin
           - apps-api/workers
           - .
-    continue-on-error: true
     defaults:
       run:
         working-directory: ${{ matrix.app-dir }}
@@ -97,7 +96,6 @@ jobs:
 
       - name: Run tests
         if: steps.detect-pm.outputs.has-package == 'true'
-        continue-on-error: true
         run: |
           if grep -q '"test"' package.json; then
             ${{ steps.detect-pm.outputs.test-cmd }}
