@@ -188,9 +188,23 @@ jobs:
             echo "⚠️  KV namespace ID not found, skipping import"
           fi
 
-          # DNS record is managed by cloudflare_pages_domain resource
-          # No separate DNS record import needed
-          echo "ℹ️  DNS record managed by Pages domain resource"
+          # Import API staging DNS record (if exists)
+          if [ -n "${{ steps.get-ids.outputs.api_dns_record_id }}" ] && [ "${{ steps.get-ids.outputs.api_dns_record_id }}" != "null" ] && [ "${{ steps.get-ids.outputs.api_dns_record_id }}" != "" ]; then
+            echo "Importing API DNS record..."
+            terraform import cloudflare_dns_record.api_staging ${{ secrets.CLOUDFLARE_ZONE_ID }}/${{ steps.get-ids.outputs.api_dns_record_id }} 2>&1 | tee /tmp/api-dns-import.log
+            if grep -q "already managed" /tmp/api-dns-import.log; then
+              echo "✅ API DNS record already in state"
+            elif grep -q "Error" /tmp/api-dns-import.log; then
+              echo "⚠️  API DNS record import had errors (may not exist yet)"
+            else
+              echo "✅ API DNS record imported"
+            fi
+          else
+            echo "ℹ️  API DNS record not found, will be created"
+          fi
+          
+          # Pages DNS record is managed by cloudflare_pages_domain resource
+          echo "ℹ️  Pages DNS record managed by Pages domain resource"
 
           set -e  # Re-enable exit on error
           echo ""
