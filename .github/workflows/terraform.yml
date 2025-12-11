@@ -117,7 +117,7 @@ jobs:
             -H "Content-Type: application/json" | \
             jq -r '.result[] | select(.title == "escriturashoy-staging-config") | .id' || echo "")
           echo "kv_namespace_id=$KV_ID" >> $GITHUB_OUTPUT
-          
+
           # Get DNS record ID
           DNS_ID=$(curl -s -X GET \
             "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records?name=staging.escriturashoy.com&type=CNAME" \
@@ -130,27 +130,86 @@ jobs:
       - name: Import Existing Resources
         run: |
           echo "Attempting to import existing resources..."
-          
+          set +e  # Don't exit on error
+
           # Import D1 database
-          terraform import cloudflare_d1_database.staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/c4d93a6a-1245-4a9f-9543-fa546f25d5c0 2>&1 | grep -v "already managed" || echo "D1 database import attempted"
-          
-          # Import R2 bucket
-          terraform import cloudflare_r2_bucket.docs ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-staging-docs 2>&1 | grep -v "already managed" || echo "R2 bucket import attempted"
-          
-          # Import Pages project
-          terraform import cloudflare_pages_project.public_staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-public-staging 2>&1 | grep -v "already managed" || echo "Pages project import attempted"
-          
+          echo "Importing D1 database..."
+          terraform import cloudflare_d1_database.staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/c4d93a6a-1245-4a9f-9543-fa546f25d5c0 2>&1 | tee /tmp/d1-import.log
+          if grep -q "already managed" /tmp/d1-import.log; then
+            echo "✅ D1 database already in state"
+          elif grep -q "Error" /tmp/d1-import.log; then
+            echo "⚠️  D1 database import had errors (may already exist)"
+          else
+            echo "✅ D1 database imported"
+          fi
+
+          # Import R2 bucket (format: account_id/bucket_name)
+          echo "Importing R2 bucket..."
+          terraform import cloudflare_r2_bucket.docs ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-staging-docs 2>&1 | tee /tmp/r2-import.log
+          if grep -q "already managed" /tmp/r2-import.log; then
+            echo "✅ R2 bucket already in state"
+          elif grep -q "Error" /tmp/r2-import.log; then
+            echo "⚠️  R2 bucket import had errors (may already exist)"
+          else
+            echo "✅ R2 bucket imported"
+          fi
+
+          # Import Pages project (format: account_id/project_name)
+          echo "Importing Pages project..."
+          terraform import cloudflare_pages_project.public_staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-public-staging 2>&1 | tee /tmp/pages-import.log
+          if grep -q "already managed" /tmp/pages-import.log; then
+            echo "✅ Pages project already in state"
+          elif grep -q "Error" /tmp/pages-import.log; then
+            echo "⚠️  Pages project import had errors (may already exist)"
+          else
+            echo "✅ Pages project imported"
+          fi
+
+          # Import Pages domain (format: account_id/project_name/domain_name)
+          echo "Importing Pages domain..."
+          terraform import cloudflare_pages_domain.public_staging_domain ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-public-staging/staging.escriturashoy.com 2>&1 | tee /tmp/pages-domain-import.log
+          if grep -q "already managed" /tmp/pages-domain-import.log; then
+            echo "✅ Pages domain already in state"
+          elif grep -q "Error" /tmp/pages-domain-import.log; then
+            echo "⚠️  Pages domain import had errors (may already exist)"
+          else
+            echo "✅ Pages domain imported"
+          fi
+
           # Import KV namespace (if ID found)
-          if [ -n "${{ steps.get-ids.outputs.kv_namespace_id }}" ] && [ "${{ steps.get-ids.outputs.kv_namespace_id }}" != "null" ]; then
-            terraform import cloudflare_workers_kv_namespace.config ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/${{ steps.get-ids.outputs.kv_namespace_id }} 2>&1 | grep -v "already managed" || echo "KV namespace import attempted"
+          if [ -n "${{ steps.get-ids.outputs.kv_namespace_id }}" ] && [ "${{ steps.get-ids.outputs.kv_namespace_id }}" != "null" ] && [ "${{ steps.get-ids.outputs.kv_namespace_id }}" != "" ]; then
+            echo "Importing KV namespace..."
+            terraform import cloudflare_workers_kv_namespace.config ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/${{ steps.get-ids.outputs.kv_namespace_id }} 2>&1 | tee /tmp/kv-import.log
+            if grep -q "already managed" /tmp/kv-import.log; then
+              echo "✅ KV namespace already in state"
+            elif grep -q "Error" /tmp/kv-import.log; then
+              echo "⚠️  KV namespace import had errors"
+            else
+              echo "✅ KV namespace imported"
+            fi
+          else
+            echo "⚠️  KV namespace ID not found, skipping import"
           fi
-          
+
           # Import DNS record (if ID found)
-          if [ -n "${{ steps.get-ids.outputs.dns_record_id }}" ] && [ "${{ steps.get-ids.outputs.dns_record_id }}" != "null" ]; then
-            terraform import cloudflare_dns_record.staging_pages ${{ secrets.CLOUDFLARE_ZONE_ID }}/${{ steps.get-ids.outputs.dns_record_id }} 2>&1 | grep -v "already managed" || echo "DNS record import attempted"
+          if [ -n "${{ steps.get-ids.outputs.dns_record_id }}" ] && [ "${{ steps.get-ids.outputs.dns_record_id }}" != "null" ] && [ "${{ steps.get-ids.outputs.dns_record_id }}" != "" ]; then
+            echo "Importing DNS record..."
+            terraform import cloudflare_dns_record.staging_pages ${{ secrets.CLOUDFLARE_ZONE_ID }}/${{ steps.get-ids.outputs.dns_record_id }} 2>&1 | tee /tmp/dns-import.log
+            if grep -q "already managed" /tmp/dns-import.log; then
+              echo "✅ DNS record already in state"
+            elif grep -q "Error" /tmp/dns-import.log; then
+              echo "⚠️  DNS record import had errors"
+            else
+              echo "✅ DNS record imported"
+            fi
+          else
+            echo "⚠️  DNS record ID not found, skipping import"
           fi
-          
-          echo "Import step completed. Some resources may already be in state."
+
+          set -e  # Re-enable exit on error
+          echo ""
+          echo "✅ Import step completed. Checking state..."
+          terraform state list
         continue-on-error: true
         env:
           TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
