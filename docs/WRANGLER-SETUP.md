@@ -22,11 +22,29 @@ This guide explains how to configure Wrangler for local deployment after Terrafo
    export CLOUDFLARE_API_TOKEN="your-token"
    ```
 
-## Step 1: Get Resource IDs from Terraform
+## Step 1: Get Resource IDs
 
 After Terraform applies successfully, get the resource IDs:
 
-### Option A: From Terraform Output (Recommended)
+### Option A: Automated Script (Easiest) ⭐
+
+Use the provided script to automatically query Cloudflare and update `wrangler.toml`:
+
+```bash
+./scripts/update-wrangler-config.sh
+```
+
+This script will:
+1. Query Cloudflare via Wrangler for all resource IDs
+2. Automatically update `wrangler.toml` with the correct IDs
+3. Uncomment and configure all bindings
+
+**Prerequisites:**
+- Wrangler authenticated: `wrangler login`
+- Terraform has created the resources
+- `jq` installed (for JSON parsing): `brew install jq` (macOS) or `apt-get install jq` (Linux)
+
+### Option B: From Terraform Output
 
 ```bash
 cd infra/cloudflare
@@ -38,7 +56,7 @@ This will show:
 - `kv_namespace_id` - KV namespace ID
 - `r2_bucket_name` - R2 bucket name (already known)
 
-### Option B: From Cloudflare Dashboard
+### Option C: From Cloudflare Dashboard
 
 1. **D1 Database ID:**
    - Go to: https://dash.cloudflare.com → Workers & Pages → D1
@@ -53,7 +71,7 @@ This will show:
 3. **R2 Bucket Name:**
    - Already known: `escriturashoy-staging-docs`
 
-### Option C: From GitHub Actions Output
+### Option D: From GitHub Actions Output
 
 After Terraform runs in CI, check the workflow output for resource IDs.
 
@@ -70,8 +88,8 @@ routes = [
 
 # D1 Database binding
 d1_databases = [
-  { 
-    binding = "DB", 
+  {
+    binding = "DB",
     database_name = "escriturashoy-staging-db",
     database_id = "YOUR_D1_DATABASE_ID_HERE"  # ← Replace this
   }
@@ -79,16 +97,16 @@ d1_databases = [
 
 # KV Namespace binding
 kv_namespaces = [
-  { 
-    binding = "CONFIG", 
+  {
+    binding = "CONFIG",
     id = "YOUR_KV_NAMESPACE_ID_HERE"  # ← Replace this
   }
 ]
 
 # R2 Bucket binding
 r2_buckets = [
-  { 
-    binding = "DOCS", 
+  {
+    binding = "DOCS",
     bucket_name = "escriturashoy-staging-docs"  # ← Already correct
   }
 ]
