@@ -23,7 +23,7 @@ This indicates the API token doesn't have sufficient permissions.
 - ✅ **Account** → **Workers Scripts** → **Edit**
 - ✅ **Account** → **D1** → **Edit**
 - ✅ **Account** → **Workers KV Storage** → **Edit**
-- ✅ **Account** → **R2** → **Edit**
+- ✅ **Account** → **Object Storage** → **Edit** (this is R2)
 
 #### Zone Level:
 - ✅ **Zone** → **DNS** → **Edit**
@@ -45,7 +45,7 @@ If your current token doesn't have all permissions, create a new one:
    - **Account** → **Workers Scripts** → **Edit**
    - **Account** → **D1** → **Edit**
    - **Account** → **Workers KV Storage** → **Edit**
-   - **Account** → **R2** → **Edit**
+   - **Account** → **Object Storage** → **Edit** (this is R2 - look for "Object Storage" in the dropdown)
    - **Zone** → **DNS** → **Edit** (select `escriturashoy.com`)
    - **Zone** → **Zone** → **Read** (select `escriturashoy.com`)
 
@@ -104,7 +104,13 @@ After updating the token, check the Terraform workflow:
 - Ensure the token has permissions for `escriturashoy.com` zone
 - Check zone resources include the correct zone
 
+### R2 permission not found
+- In the Cloudflare API token UI, R2 permissions are listed as **"Object Storage"** (not "R2")
+- Look for: **Account** → **Object Storage** → **Edit**
+- This permission allows creating and managing R2 buckets
+
 ---
 
 *Last updated: 2025-12-11*
+
 
