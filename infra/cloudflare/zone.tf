@@ -5,7 +5,7 @@ data "cloudflare_zone" "main" {
 }
 
 # Staging subdomain DNS record for Pages
-resource "cloudflare_record" "staging_pages" {
+resource "cloudflare_dns_record" "staging_pages" {
   zone_id = data.cloudflare_zone.main.zone_id
   name    = "staging"
   type    = "CNAME"
