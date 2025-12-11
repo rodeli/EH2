@@ -64,7 +64,7 @@ describe('API Worker', () => {
         }
 
         if (method === 'POST' && path === '/leads') {
-          const body = await request.json();
+          const body = await request.json() as any;
           if (!body.name || !body.email || !body.property_location || !body.property_type) {
             return new Response(JSON.stringify({
               error: 'Validation Error',
@@ -76,7 +76,7 @@ describe('API Worker', () => {
           }
           return new Response(JSON.stringify({
             success: true,
-            data: { id: 'test-id', ...body },
+            data: { id: 'test-id', ...(body as object) },
           }), {
             status: 201,
             headers: { 'Content-Type': 'application/json' },
