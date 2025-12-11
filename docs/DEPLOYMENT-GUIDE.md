@@ -1,141 +1,119 @@
-# Deployment Guide - Escriturashoy 2.0
+# Staging Deployment Guide
 
-## Overview
+## Step 1: Configure GitHub Secrets ⚠️ REQUIRED
 
-This guide walks through deploying Escriturashoy 2.0 to staging on Cloudflare.
+Before Terraform can run, you must configure these 3 secrets in GitHub:
 
-## Prerequisites
+### Quick Links
+- **GitHub Secrets:** https://github.com/rodeli/EH2/settings/secrets/actions
+- **Cloudflare API Tokens:** https://dash.cloudflare.com/profile/api-tokens
+- **Cloudflare Dashboard:** https://dash.cloudflare.com/
 
-1. **Cloudflare Account**
-   - Account with API token
-   - Zone `escriturashoy.com` already exists
-   - Permissions: DNS, D1, KV, R2, Workers, Pages
+### Secret 1: CLOUDFLARE_API_TOKEN
 
-2. **GitHub Repository**
-   - Repository: `rodeli/EH2`
-   - Secrets configured (see below)
+1. Go to: https://dash.cloudflare.com/profile/api-tokens
+2. Click **"Create Token"**
+3. Use **"Edit zone DNS"** template OR create custom token with:
+   - **Zone:** DNS:Edit, Zone:Read
+   - **Account:** Cloudflare Pages:Edit, Workers Scripts:Edit, D1:Edit, Workers KV Storage:Edit, R2:Edit
+4. **Copy the token** (you won't see it again!)
+5. Add to GitHub: Name = `CLOUDFLARE_API_TOKEN`, Value = your token
 
-3. **Local Tools** (optional)
-   - Terraform >= 1.6.0
-   - Wrangler CLI
-   - Node.js 18+
+### Secret 2: CLOUDFLARE_ACCOUNT_ID
 
-## Step 1: Configure GitHub Secrets
+1. Go to: https://dash.cloudflare.com/
+2. Select your account
+3. **Account ID** is in the right sidebar
+4. Add to GitHub: Name = `CLOUDFLARE_ACCOUNT_ID`, Value = your account ID
 
-Go to: `https://github.com/rodeli/EH2/settings/secrets/actions`
+### Secret 3: CLOUDFLARE_ZONE_ID
 
-Add the following secrets:
-- `CLOUDFLARE_API_TOKEN` - Your Cloudflare API token
-- `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare account ID
-- `CLOUDFLARE_ZONE_ID` - Zone ID for escriturashoy.com
+1. Go to: https://dash.cloudflare.com/
+2. Select the **`escriturashoy.com`** zone
+3. Scroll down on Overview page
+4. **Zone ID** is in the API section
+5. Add to GitHub: Name = `CLOUDFLARE_ZONE_ID`, Value = your zone ID
 
-## Step 2: Deploy Infrastructure (Terraform)
+---
 
-### Option A: Via GitHub Actions (Recommended)
+## Step 2: Trigger Terraform Deployment
 
-1. **Create a PR** with any change to `infra/cloudflare/**`
-2. **Review the Terraform plan** in the PR comments
-3. **Merge to main** - Terraform will apply automatically
+Once secrets are configured, Terraform will run automatically when:
+- Code is pushed to `main` branch
+- OR you can create a PR to see the plan first
 
-### Option B: Manual Deployment
+### Option A: Automatic (Recommended)
+1. Make a small change to trigger workflow:
+   ```bash
+   # Create a trigger commit
+   git commit --allow-empty -m "chore: Trigger Terraform deployment"
+   git push origin main
+   ```
+2. Go to: https://github.com/rodeli/EH2/actions
+3. Watch the "Terraform Apply" workflow run
+4. Verify resources are created
 
+### Option B: Manual Terraform (Alternative)
+If you prefer to run Terraform locally:
 ```bash
 cd infra/cloudflare
-
-# Create terraform.tfvars (do not commit)
-cat > terraform.tfvars <<EOF
-cloudflare_api_token = "your-api-token"
-cloudflare_account_id = "your-account-id"
-zone_id = "your-zone-id"
-project_name = "escriturashoy"
-environment = "staging"
-EOF
-
-# Initialize and apply
 terraform init
 terraform plan
 terraform apply
 ```
 
-**Resources Created:**
-- D1 Database: `escriturashoy-staging-db`
-- KV Namespace: `escriturashoy-staging-config`
-- R2 Bucket: `esh-docs-staging`
-- Pages Project: `escriturashoy-public-staging`
-- DNS Records: `staging.escriturashoy.com`
+---
 
 ## Step 3: Deploy API Worker
 
-### First Time (Manual)
+After Terraform creates the D1 database:
 
-```bash
-cd apps-api/workers
+1. **Get the database ID** from Terraform output or Cloudflare dashboard
+2. **Update wrangler.toml** with the database ID:
+   ```toml
+   [env.staging]
+   d1_databases = [
+     { binding = "DB", database_name = "escriturashoy-staging-db", database_id = "YOUR_DATABASE_ID" }
+   ]
+   ```
+3. **Deploy the Worker:**
+   ```bash
+   cd apps-api/workers
+   npm run deploy:staging
+   ```
+   Or if the script doesn't exist:
+   ```bash
+   wrangler deploy --env staging
+   ```
 
-# Get database ID from Terraform output
-cd ../../infra/cloudflare
-terraform output d1_database_id
+---
 
-# Update wrangler.toml with the database_id (if not already done)
-# Then deploy
-cd ../../apps-api/workers
-npm run deploy:staging
-```
+## Step 4: Deploy Pages
 
-### Subsequent Deployments
+Pages should deploy automatically via Cloudflare Pages integration, OR:
 
-Deployments will be automated via CI/CD, or manually:
-```bash
-cd apps-api/workers
-npm run deploy:staging
-```
+1. Go to: https://dash.cloudflare.com/
+2. Navigate to **Pages** → **Create a project**
+3. Connect your GitHub repository
+4. Configure build settings:
+   - **Framework preset:** Vite
+   - **Build command:** `npm run build`
+   - **Build output directory:** `dist`
+   - **Root directory:** `apps/public` (for public site)
 
-**Worker URL:** `https://api-staging.escriturashoy.com`
+Repeat for `apps/client` and `apps/admin` if needed.
 
-## Step 4: Deploy Pages Projects
-
-### Public Site
-
-Pages will deploy automatically when:
-- Terraform creates the project
-- Code is pushed to main
-- Or manually via Cloudflare dashboard
-
-**URL:** `https://staging.escriturashoy.com`
-
-### Client Portal (Future)
-
-When ready, create Pages project for `apps/client`:
-- Name: `escriturashoy-client-staging`
-- Build command: `cd apps/client && npm install && npm run build`
-- Root directory: `apps/client`
-- Output directory: `dist`
-
-### Admin Portal (Future)
-
-When ready, create Pages project for `apps/admin`:
-- Name: `escriturashoy-admin-staging`
-- Build command: `cd apps/admin && npm install && npm run build`
-- Root directory: `apps/admin`
-- Output directory: `dist`
-- **Important:** Protect with Cloudflare Zero Trust
+---
 
 ## Step 5: Verify Deployment
 
-### 1. Check Infrastructure
+### Test Public Site
+- Visit: `https://staging.escriturashoy.com`
+- Verify lead form loads
+- Submit a test lead
+- Check database for the lead
 
-```bash
-# List D1 databases
-wrangler d1 list
-
-# List KV namespaces
-wrangler kv:namespace list
-
-# List R2 buckets
-wrangler r2 bucket list
-```
-
-### 2. Test API
-
+### Test API
 ```bash
 # Health check
 curl https://api-staging.escriturashoy.com/health
@@ -146,90 +124,35 @@ curl https://api-staging.escriturashoy.com/version
 # Create lead
 curl -X POST https://api-staging.escriturashoy.com/leads \
   -H "Content-Type: application/json" \
-  -d '{
-    "name": "Test User",
-    "email": "test@example.com",
-    "property_location": "Ciudad de México",
-    "property_type": "casa"
-  }'
+  -d '{"name":"Test User","email":"test@example.com","phone":"1234567890","property_location":"Test City","property_type":"casa","urgency":"normal","privacy_consent":true,"legal_disclaimer":true}'
 ```
 
-### 3. Test Public Site
+### Check Database
+```bash
+cd apps-api/workers
+wrangler d1 execute escriturashoy-staging-db \
+  --command="SELECT * FROM leads LIMIT 5;" \
+  --remote
+```
 
-1. Visit `https://staging.escriturashoy.com`
-2. Fill out lead form
-3. Submit and verify success message
-4. Check database for new lead:
-   ```bash
-   wrangler d1 execute escriturashoy-staging-db \
-     --command="SELECT * FROM leads ORDER BY created_at DESC LIMIT 1;" \
-     --remote
-   ```
-
-### 4. Verify Compliance
-
-- [ ] Legal disclaimer visible on public site
-- [ ] Privacy consent checkbox required
-- [ ] Privacy policy link present
-- [ ] Terms of service link present
+---
 
 ## Troubleshooting
 
-### Worker Not Deploying
+### Terraform fails with "secret not found"
+- Verify all 3 secrets are set in GitHub
+- Check secret names match exactly (case-sensitive)
 
-- Check wrangler.toml configuration
-- Verify database_id is correct
-- Check Cloudflare dashboard for errors
+### Worker deployment fails
+- Verify database exists in Cloudflare dashboard
+- Check database_id in wrangler.toml matches
+- Ensure API token has Workers Scripts:Edit permission
 
-### Pages Not Building
-
-- Check build command in Terraform
-- Verify package.json exists
-- Check Pages build logs in Cloudflare dashboard
-
-### Database Connection Issues
-
-- Verify database_id in wrangler.toml
-- Check database exists: `wrangler d1 list`
-- Verify bindings are correct
-
-### API Not Responding
-
-- Check Worker is deployed
-- Verify routes are configured
-- Check Worker logs in Cloudflare dashboard
-
-## Rollback
-
-### Rollback Worker
-
-```bash
-cd apps-api/workers
-wrangler rollback --env staging
-```
-
-### Rollback Terraform
-
-```bash
-cd infra/cloudflare
-terraform plan  # Review changes
-terraform apply  # Apply previous state
-```
-
-## Production Deployment
-
-For production deployment:
-
-1. **Create production environment** in Terraform
-2. **Set up production secrets** in GitHub
-3. **Configure production domains**
-4. **Enable Zero Trust** for admin portal
-5. **Set up monitoring and alerts**
-6. **Configure backup and disaster recovery**
-
-See `docs/ROADMAP.md` for production readiness requirements.
+### Pages not deploying
+- Check Cloudflare Pages project is created
+- Verify build settings are correct
+- Check build logs in Cloudflare dashboard
 
 ---
 
 *Last updated: 2025-12-11*
-
