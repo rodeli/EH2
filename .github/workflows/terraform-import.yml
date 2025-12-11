@@ -1,0 +1,97 @@
+name: Terraform Import Existing Resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      account_id:
+        description: 'Cloudflare Account ID'
+        required: true
+      zone_id:
+        description: 'Cloudflare Zone ID'
+        required: true
+
+env:
+  TF_VERSION: "1.6.0"
+  WORKING_DIR: infra/cloudflare
+
+jobs:
+  terraform-import:
+    name: Import Existing Resources
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init
+        env:
+          TF_INPUT: false
+
+      - name: Import D1 Database
+        run: |
+          terraform import cloudflare_d1_database.staging ${{ inputs.account_id }}/c4d93a6a-1245-4a9f-9543-fa546f25d5c0 || echo "D1 database may already be imported"
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ inputs.account_id }}
+          TF_VAR_zone_id: ${{ inputs.zone_id }}
+          TF_VAR_environment: staging
+          TF_VAR_project_name: escriturashoy
+
+      - name: Import R2 Bucket
+        run: |
+          terraform import cloudflare_r2_bucket.docs ${{ inputs.account_id }}/escriturashoy-staging-docs || echo "R2 bucket may already be imported"
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ inputs.account_id }}
+          TF_VAR_zone_id: ${{ inputs.zone_id }}
+          TF_VAR_environment: staging
+          TF_VAR_project_name: escriturashoy
+
+      - name: Get KV Namespace ID
+        id: kv-namespace
+        run: |
+          # Note: This requires wrangler or API call to get namespace ID
+          # For now, we'll skip and provide manual instructions
+          echo "namespace_id=MANUAL" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Import KV Namespace (Manual)
+        run: |
+          echo "⚠️  KV namespace import requires namespace ID"
+          echo "Get it from: https://dash.cloudflare.com → Workers & Pages → KV"
+          echo "Then run: terraform import cloudflare_workers_kv_namespace.config ${{ inputs.account_id }}/<namespace_id>"
+        continue-on-error: true
+
+      - name: Get DNS Record ID
+        id: dns-record
+        run: |
+          # Note: This requires API call to get record ID
+          # For now, we'll skip and provide manual instructions
+          echo "record_id=MANUAL" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Import DNS Record (Manual)
+        run: |
+          echo "⚠️  DNS record import requires record ID"
+          echo "Get it from: https://dash.cloudflare.com → escriturashoy.com → DNS"
+          echo "Then run: terraform import cloudflare_dns_record.staging_pages ${{ inputs.zone_id }}/<record_id>"
+        continue-on-error: true
+
+      - name: Terraform Plan
+        run: terraform plan -no-color
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ inputs.account_id }}
+          TF_VAR_zone_id: ${{ inputs.zone_id }}
+          TF_VAR_environment: staging
+          TF_VAR_project_name: escriturashoy
+

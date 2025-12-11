@@ -104,6 +104,19 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Import Existing Resources
+        run: |
+          echo "Attempting to import existing resources..."
+          terraform import cloudflare_d1_database.staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/c4d93a6a-1245-4a9f-9543-fa546f25d5c0 || echo "D1 database may already be imported or doesn't exist"
+          terraform import cloudflare_r2_bucket.docs ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-staging-docs || echo "R2 bucket may already be imported or doesn't exist"
+        continue-on-error: true
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TF_VAR_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          TF_VAR_environment: staging
+          TF_VAR_project_name: escriturashoy
+
       - name: Terraform Plan
         run: terraform plan -no-color
         env:
