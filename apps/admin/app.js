@@ -160,11 +160,11 @@ function renderExpedientes(expedientes) {
  */
 function updateStats(leads, expedientes) {
   document.getElementById('leads-count').textContent = leads?.length || 0;
-  
+
   // Count active expedientes
   const activeExpedientes = expedientes?.filter(e => e.status === 'activo') || [];
   document.getElementById('expedientes-count').textContent = activeExpedientes.length;
-  
+
   // Calculate new this week
   const weekAgo = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60);
   const newThisWeek = leads?.filter(l => l.created_at >= weekAgo).length || 0;
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadLeads(),
     loadExpedientes()
   ]);
-  
+
   // Update stats with loaded data
   updateStats(leads, expedientes);
 });

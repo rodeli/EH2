@@ -125,16 +125,16 @@ wrangler pages deployment delete <deployment-id> --project-name=escriturashoy-pu
 
 ## Advantages of Wrangler Deployment
 
-✅ **Fast:** Deploy immediately without waiting for GitHub webhooks  
-✅ **Control:** Deploy specific builds, test before deploying  
-✅ **No GitHub Required:** Works without connecting GitHub repo  
-✅ **Local Testing:** Build and test locally before deploying  
+✅ **Fast:** Deploy immediately without waiting for GitHub webhooks
+✅ **Control:** Deploy specific builds, test before deploying
+✅ **No GitHub Required:** Works without connecting GitHub repo
+✅ **Local Testing:** Build and test locally before deploying
 
 ## Disadvantages
 
-❌ **Manual:** Must run command each time (no auto-deploy on push)  
-❌ **No Build History:** Less visibility in Cloudflare dashboard  
-❌ **No Preview Deployments:** Can't preview PRs automatically  
+❌ **Manual:** Must run command each time (no auto-deploy on push)
+❌ **No Build History:** Less visibility in Cloudflare dashboard
+❌ **No Preview Deployments:** Can't preview PRs automatically
 
 ## Recommended Workflow
 

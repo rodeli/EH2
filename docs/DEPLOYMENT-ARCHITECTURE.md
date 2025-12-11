@@ -91,7 +91,7 @@ Wrangler deploys the **Worker application code** to Cloudflare:
 
 - **Manually:** Run locally with `npm run deploy:staging`
 - **Location:** Runs on your local machine
-- **Requires:** 
+- **Requires:**
   - Wrangler CLI installed (`npm install -g wrangler` or via `npm install`)
   - Authenticated with Cloudflare (`wrangler login` or API token)
 
@@ -150,8 +150,8 @@ The bindings in `wrangler.toml` must reference the **exact same resources** crea
 # wrangler.toml
 [env.staging]
 d1_databases = [
-  { 
-    binding = "DB", 
+  {
+    binding = "DB",
     database_name = "escriturashoy-staging-db",  # Must match Terraform
     database_id = "..."  # Get from Terraform output
   }
@@ -181,7 +181,7 @@ Both are needed for the API to work.
 
 ### "Database not found"
 - **Cause:** Database doesn't exist or wrong `database_id` in `wrangler.toml`
-- **Fix:** 
+- **Fix:**
   1. Verify Terraform created the database
   2. Get `database_id` from Terraform output
   3. Update `wrangler.toml` with correct ID

@@ -202,7 +202,7 @@ jobs:
           else
             echo "ℹ️  API DNS record not found, will be created"
           fi
-          
+
           # Pages DNS record is managed by cloudflare_pages_domain resource
           echo "ℹ️  Pages DNS record managed by Pages domain resource"
 

@@ -37,11 +37,11 @@
   - Project created by Terraform
   - Needs: GitHub repo connection + build configuration
   - Expected URL: `https://staging.escriturashoy.com`
-  
+
 - ⏳ **Client Portal** (`apps/client`)
   - Not yet configured in Terraform
   - Future: Add to Pages projects
-  
+
 - ⏳ **Admin Portal** (`apps/admin`)
   - Not yet configured in Terraform
   - Future: Add to Pages projects
