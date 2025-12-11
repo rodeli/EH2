@@ -34,6 +34,6 @@ VERSION = "0.1.0"
 # name = "escriturashoy-api"
 # routes = [
 #   { pattern = "api.escriturashoy.com/*", zone_name = "escriturashoy.com" }
-]
+# ]
 # [env.production.vars]
 # ENVIRONMENT = "production"
