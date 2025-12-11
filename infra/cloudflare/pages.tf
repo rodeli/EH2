@@ -9,6 +9,6 @@ resource "cloudflare_pages_project" "public_staging" {
 resource "cloudflare_pages_domain" "public_staging_domain" {
   account_id   = var.cloudflare_account_id
   project_name = cloudflare_pages_project.public_staging.name
-  domain       = "staging.${data.cloudflare_zone.main.name}"
+  domain       = "staging.${var.zone_name}"
 }
 

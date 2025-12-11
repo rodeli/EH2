@@ -5,7 +5,7 @@ output "zone_id" {
 
 output "zone_name" {
   description = "Cloudflare zone name"
-  value       = data.cloudflare_zone.main.name
+  value       = var.zone_name
 }
 
 output "pages_project_name" {
