@@ -39,13 +39,17 @@
   - Live at: `https://staging.escriturashoy.com`
   - Pages.dev: `https://47c6e210.escriturashoy-public-staging.pages.dev`
 
-- ⏳ **Client Portal** (`apps/client`)
-  - Not yet configured in Terraform
-  - Future: Add to Pages projects
+- ✅ **Client Portal** (`apps/client`)
+  - Pages project created: `escriturashoy-client-staging`
+  - Deployed via Wrangler Pages
+  - Live at: `https://97f5ee62.escriturashoy-client-staging.pages.dev`
+  - Custom domain: (can be added via dashboard)
 
-- ⏳ **Admin Portal** (`apps/admin`)
-  - Not yet configured in Terraform
-  - Future: Add to Pages projects
+- ✅ **Admin Portal** (`apps/admin`)
+  - Pages project created: `escriturashoy-admin-staging`
+  - Deployed via Wrangler Pages
+  - Live at: `https://1504e457.escriturashoy-admin-staging.pages.dev`
+  - Custom domain: (can be added via dashboard)
 
 ## 🔍 Verification Steps
 
@@ -135,9 +139,9 @@ None currently. All deployed components are working correctly.
 ## 🔗 URLs
 
 - **API:** https://api-staging.escriturashoy.com
-- **Public Site:** https://staging.escriturashoy.com (pending verification)
-- **Admin Portal:** (not yet deployed)
-- **Client Portal:** (not yet deployed)
+- **Public Site:** https://staging.escriturashoy.com
+- **Admin Portal:** https://1504e457.escriturashoy-admin-staging.pages.dev
+- **Client Portal:** https://97f5ee62.escriturashoy-client-staging.pages.dev
 
 ---
 
