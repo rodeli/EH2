@@ -37,12 +37,16 @@ if [ -z "$ACCOUNT_ID" ]; then
 fi
 
 # Get zone ID
-if [ -f "terraform.tfvars" ]; then
+if [ -n "$CLOUDFLARE_ZONE_ID" ]; then
+  ZONE_ID="$CLOUDFLARE_ZONE_ID"
+  echo "✅ Using Zone ID from environment: $ZONE_ID"
+elif [ -f "terraform.tfvars" ]; then
   ZONE_ID=$(grep "zone_id" terraform.tfvars | cut -d'"' -f2 || echo "")
 fi
 
 if [ -z "$ZONE_ID" ]; then
   echo "Please enter your Cloudflare Zone ID:"
+  echo "  (You can find it in GitHub Secrets or Cloudflare Dashboard)"
   read -r ZONE_ID
 fi
 
