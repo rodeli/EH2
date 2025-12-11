@@ -83,15 +83,9 @@ terraform import cloudflare_pages_domain.public_staging_domain <account_id>/escr
 
 ### DNS Record
 
-**Format:** `zone_id/record_id`
+**Note:** DNS records for Pages custom domains are automatically managed by `cloudflare_pages_domain`. No manual DNS record import needed.
 
-```bash
-terraform import cloudflare_dns_record.staging_pages <zone_id>/<record_id>
-```
-
-**Find Record ID:**
-- Cloudflare Dashboard: https://dash.cloudflare.com → escriturashoy.com → DNS
-- Or use: `./scripts/get-resource-ids.sh`
+If you have a manual DNS record that conflicts, delete it from the Cloudflare dashboard and let the Pages domain resource manage it.
 
 ## Manual Import Steps
 
@@ -113,19 +107,19 @@ terraform import cloudflare_dns_record.staging_pages <zone_id>/<record_id>
    ```bash
    # D1 Database
    terraform import cloudflare_d1_database.staging $ACCOUNT_ID/c4d93a6a-1245-4a9f-9543-fa546f25d5c0
-   
+
    # R2 Bucket
    terraform import cloudflare_r2_bucket.docs $ACCOUNT_ID/escriturashoy-staging-docs/default
-   
+
    # Pages Project
    terraform import cloudflare_pages_project.public_staging $ACCOUNT_ID/escriturashoy-public-staging
-   
+
    # Pages Domain
    terraform import cloudflare_pages_domain.public_staging_domain $ACCOUNT_ID/escriturashoy-public-staging/staging.escriturashoy.com
-   
+
    # KV Namespace (get ID first)
    terraform import cloudflare_workers_kv_namespace.config $ACCOUNT_ID/<namespace_id>
-   
+
    # DNS Record (get ID first)
    terraform import cloudflare_dns_record.staging_pages $ZONE_ID/<record_id>
    ```
