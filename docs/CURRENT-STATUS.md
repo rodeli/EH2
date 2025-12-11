@@ -73,7 +73,9 @@
 - ✅ Automatic resource import in CI
 - ✅ R2 import format fixed (with jurisdiction)
 - ✅ Pages domain import added
-- ⚠️ Terraform deployment pending (waiting for successful CI run)
+- ✅ Terraform deployment completed
+- ✅ API Worker deployed to staging
+- ✅ API endpoints verified and working
 
 ## Pending Milestones
 
