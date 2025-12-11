@@ -21,7 +21,7 @@ To deploy Escriturashoy 2.0 to Cloudflare, you need to configure GitHub Secrets 
    - Account: Workers Scripts:Edit
    - Account: D1:Edit
    - Account: Workers KV Storage:Edit
-   - Account: Object Storage:Edit (this is R2 - look for "Object Storage" in the dropdown)
+   - Account: Workers R2 Storage:Edit (this is R2 - look for "Workers R2 Storage" in the dropdown)
 5. Copy the token (you won't see it again!)
 
 **Add to GitHub:**

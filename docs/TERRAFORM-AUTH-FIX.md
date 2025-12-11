@@ -19,11 +19,11 @@ This indicates the API token doesn't have sufficient permissions.
 **Required Permissions:**
 
 #### Account Level:
-- ✅ **Account** → **Cloudflare Pages** → **Edit**
+- ✅ **Account** → **Cloudflare Pages** → **Edit** ⚠️ **MISSING - This is why Pages failed with 403**
 - ✅ **Account** → **Workers Scripts** → **Edit**
 - ✅ **Account** → **D1** → **Edit**
 - ✅ **Account** → **Workers KV Storage** → **Edit**
-- ✅ **Account** → **Object Storage** → **Edit** (this is R2)
+- ✅ **Account** → **Workers R2 Storage** → **Edit** (this is R2 - you have this!)
 
 #### Zone Level:
 - ✅ **Zone** → **DNS** → **Edit**
@@ -41,13 +41,15 @@ If your current token doesn't have all permissions, create a new one:
    **Token Name:** `Escriturashoy Terraform`
 
    **Permissions:**
-   - **Account** → **Cloudflare Pages** → **Edit**
-   - **Account** → **Workers Scripts** → **Edit**
-   - **Account** → **D1** → **Edit**
-   - **Account** → **Workers KV Storage** → **Edit**
-   - **Account** → **Object Storage** → **Edit** (this is R2 - look for "Object Storage" in the dropdown)
-   - **Zone** → **DNS** → **Edit** (select `escriturashoy.com`)
-   - **Zone** → **Zone** → **Read** (select `escriturashoy.com`)
+   - **Account** → **Cloudflare Pages** → **Edit** ⚠️ **ADD THIS - Currently missing!**
+   - **Account** → **Workers Scripts** → **Edit** ✅ You have this
+   - **Account** → **D1** → **Edit** ✅ You have this
+   - **Account** → **Workers KV Storage** → **Edit** ✅ You have this
+   - **Account** → **Workers R2 Storage** → **Edit** ✅ You have this (this is R2)
+   - **Zone** → **DNS** → **Edit** ✅ You have this (select `escriturashoy.com`)
+   - **Zone** → **Zone** → **Read** ✅ You have this (select `escriturashoy.com`)
+   
+   **Note:** You can ignore "Workers R2 Data Catalog" and "Workers R2 SQL" - those are optional.
 
    **Account Resources:**
    - Include → **All accounts** (or select your specific account)
@@ -105,9 +107,13 @@ After updating the token, check the Terraform workflow:
 - Check zone resources include the correct zone
 
 ### R2 permission not found
-- In the Cloudflare API token UI, R2 permissions are listed as **"Object Storage"** (not "R2")
-- Look for: **Account** → **Object Storage** → **Edit**
+- In the Cloudflare API token UI, R2 permissions are listed as **"Workers R2 Storage"** (not "R2" or "Object Storage")
+- Look for: **Account** → **Workers R2 Storage** → **Edit**
 - This permission allows creating and managing R2 buckets
+
+### Missing Cloudflare Pages permission
+- If you see `403 Forbidden` for Pages resources, you're missing: **Account** → **Cloudflare Pages** → **Edit**
+- Add this permission to your token and update the GitHub Secret
 
 ---
 
