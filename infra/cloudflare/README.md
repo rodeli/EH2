@@ -70,3 +70,4 @@ Terraform is managed via GitHub Actions:
 
 See `.github/workflows/terraform.yml` for workflow configuration.
 
+# Terraform validation fix
