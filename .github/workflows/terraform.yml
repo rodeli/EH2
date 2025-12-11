@@ -119,13 +119,9 @@ jobs:
             jq -r '.result[] | select(.title == "escriturashoy-staging-config") | .id' || echo "")
           echo "kv_namespace_id=$KV_ID" >> $GITHUB_OUTPUT
 
-          # Get DNS record ID
-          DNS_ID=$(curl -s -X GET \
-            "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records?name=staging.escriturashoy.com&type=CNAME" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" | \
-            jq -r '.result[0].id' || echo "")
-          echo "dns_record_id=$DNS_ID" >> $GITHUB_OUTPUT
+          # DNS record is now managed by cloudflare_pages_domain
+          # No need to fetch DNS record ID
+          echo "dns_record_id=" >> $GITHUB_OUTPUT
         continue-on-error: true
 
       - name: Import Existing Resources
@@ -192,20 +188,9 @@ jobs:
             echo "⚠️  KV namespace ID not found, skipping import"
           fi
 
-          # Import DNS record (if ID found)
-          if [ -n "${{ steps.get-ids.outputs.dns_record_id }}" ] && [ "${{ steps.get-ids.outputs.dns_record_id }}" != "null" ] && [ "${{ steps.get-ids.outputs.dns_record_id }}" != "" ]; then
-            echo "Importing DNS record..."
-            terraform import cloudflare_dns_record.staging_pages ${{ secrets.CLOUDFLARE_ZONE_ID }}/${{ steps.get-ids.outputs.dns_record_id }} 2>&1 | tee /tmp/dns-import.log
-            if grep -q "already managed" /tmp/dns-import.log; then
-              echo "✅ DNS record already in state"
-            elif grep -q "Error" /tmp/dns-import.log; then
-              echo "⚠️  DNS record import had errors"
-            else
-              echo "✅ DNS record imported"
-            fi
-          else
-            echo "⚠️  DNS record ID not found, skipping import"
-          fi
+          # DNS record is managed by cloudflare_pages_domain resource
+          # No separate DNS record import needed
+          echo "ℹ️  DNS record managed by Pages domain resource"
 
           set -e  # Re-enable exit on error
           echo ""
