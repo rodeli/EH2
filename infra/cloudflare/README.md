@@ -2,6 +2,8 @@
 
 This directory contains Terraform configurations for managing all Cloudflare resources for Escriturashoy.
 
+> **Note:** This file was updated to trigger Terraform deployment workflow.
+
 ## Prerequisites
 
 1. Cloudflare account with API token
