@@ -121,25 +121,37 @@ After Terraform creates the D1 database:
    # Edit wrangler.toml and update database_id if needed
    ```
 
-3. **Deploy the Worker:**
+3. **Wait for DNS propagation:**
+   - After Terraform creates the DNS record, wait 1-2 minutes for DNS propagation
+   - Verify DNS record exists: `dig api-staging.escriturashoy.com` or check Cloudflare dashboard
+
+4. **Deploy the Worker:**
    ```bash
    cd apps-api/workers
    npm run deploy:staging
    ```
-   
+
    Or manually:
    ```bash
    wrangler deploy --env staging
    ```
 
-4. **Verify deployment:**
+   **Note:** The Worker route in `wrangler.toml` will use the DNS record created by Terraform.
+
+5. **Verify deployment:**
    ```bash
    # Health check
    curl https://api-staging.escriturashoy.com/health
-   
+
    # Version
    curl https://api-staging.escriturashoy.com/version
    ```
+
+   **If you get "Could not resolve host":**
+   - Wait for Terraform to create the DNS record (check GitHub Actions)
+   - Wait 1-2 minutes for DNS propagation
+   - Verify DNS record in Cloudflare dashboard
+   - Then deploy the Worker
 
 ## Step 4: Deploy Pages
 
