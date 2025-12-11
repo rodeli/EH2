@@ -46,21 +46,30 @@ jobs:
         id: detect-pm
         run: |
           if [ -f "package.json" ]; then
+            APP_DIR="${{ matrix.app-dir }}"
+            if [ "$APP_DIR" = "." ]; then
+              LOCK_PREFIX=""
+            else
+              LOCK_PREFIX="$APP_DIR/"
+            fi
             if [ -f "pnpm-lock.yaml" ] || [ -f "pnpm-workspace.yaml" ]; then
               echo "pm=pnpm" >> $GITHUB_OUTPUT
               echo "install-cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
               echo "test-cmd=pnpm test" >> $GITHUB_OUTPUT
               echo "lint-cmd=pnpm run lint" >> $GITHUB_OUTPUT
+              echo "lock-file=${LOCK_PREFIX}pnpm-lock.yaml" >> $GITHUB_OUTPUT
             elif [ -f "yarn.lock" ]; then
               echo "pm=yarn" >> $GITHUB_OUTPUT
               echo "install-cmd=yarn install --frozen-lockfile" >> $GITHUB_OUTPUT
               echo "test-cmd=yarn test" >> $GITHUB_OUTPUT
               echo "lint-cmd=yarn run lint" >> $GITHUB_OUTPUT
+              echo "lock-file=${LOCK_PREFIX}yarn.lock" >> $GITHUB_OUTPUT
             else
               echo "pm=npm" >> $GITHUB_OUTPUT
               echo "install-cmd=npm ci" >> $GITHUB_OUTPUT
               echo "test-cmd=npm test" >> $GITHUB_OUTPUT
               echo "lint-cmd=npm run lint" >> $GITHUB_OUTPUT
+              echo "lock-file=${LOCK_PREFIX}package-lock.json" >> $GITHUB_OUTPUT
             fi
             echo "has-package=true" >> $GITHUB_OUTPUT
           else
@@ -73,6 +82,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: ${{ steps.detect-pm.outputs.pm }}
+          cache-dependency-path: ${{ steps.detect-pm.outputs.lock-file }}
 
       - name: Setup pnpm
         if: steps.detect-pm.outputs.pm == 'pnpm'
