@@ -104,11 +104,50 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Get Resource IDs
+        id: get-ids
+        run: |
+          # Get KV namespace ID
+          KV_ID=$(curl -s -X GET \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/storage/kv/namespaces" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" | \
+            jq -r '.result[] | select(.title == "escriturashoy-staging-config") | .id' || echo "")
+          echo "kv_namespace_id=$KV_ID" >> $GITHUB_OUTPUT
+          
+          # Get DNS record ID
+          DNS_ID=$(curl -s -X GET \
+            "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records?name=staging.escriturashoy.com&type=CNAME" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" | \
+            jq -r '.result[0].id' || echo "")
+          echo "dns_record_id=$DNS_ID" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
       - name: Import Existing Resources
         run: |
           echo "Attempting to import existing resources..."
-          terraform import cloudflare_d1_database.staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/c4d93a6a-1245-4a9f-9543-fa546f25d5c0 || echo "D1 database may already be imported or doesn't exist"
-          terraform import cloudflare_r2_bucket.docs ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-staging-docs || echo "R2 bucket may already be imported or doesn't exist"
+          
+          # Import D1 database
+          terraform import cloudflare_d1_database.staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/c4d93a6a-1245-4a9f-9543-fa546f25d5c0 2>&1 | grep -v "already managed" || echo "D1 database import attempted"
+          
+          # Import R2 bucket
+          terraform import cloudflare_r2_bucket.docs ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-staging-docs 2>&1 | grep -v "already managed" || echo "R2 bucket import attempted"
+          
+          # Import Pages project
+          terraform import cloudflare_pages_project.public_staging ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/escriturashoy-public-staging 2>&1 | grep -v "already managed" || echo "Pages project import attempted"
+          
+          # Import KV namespace (if ID found)
+          if [ -n "${{ steps.get-ids.outputs.kv_namespace_id }}" ] && [ "${{ steps.get-ids.outputs.kv_namespace_id }}" != "null" ]; then
+            terraform import cloudflare_workers_kv_namespace.config ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/${{ steps.get-ids.outputs.kv_namespace_id }} 2>&1 | grep -v "already managed" || echo "KV namespace import attempted"
+          fi
+          
+          # Import DNS record (if ID found)
+          if [ -n "${{ steps.get-ids.outputs.dns_record_id }}" ] && [ "${{ steps.get-ids.outputs.dns_record_id }}" != "null" ]; then
+            terraform import cloudflare_dns_record.staging_pages ${{ secrets.CLOUDFLARE_ZONE_ID }}/${{ steps.get-ids.outputs.dns_record_id }} 2>&1 | grep -v "already managed" || echo "DNS record import attempted"
+          fi
+          
+          echo "Import step completed. Some resources may already be in state."
         continue-on-error: true
         env:
           TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
